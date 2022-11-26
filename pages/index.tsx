@@ -1,10 +1,49 @@
 import type { NextPage } from "next";
+import { useEffect } from "react";
+import { useAccount, useContract, useProvider } from "wagmi";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { ABI } from "../blockchain/ABIS/Eventnexo";
 import EventCard from "../components/cards/EventCard";
 import Hero from "../components/Hero";
 import AppLayout from "../components/layout/AppLayout";
 import Meta from "../components/partials/Meta";
+import { updateEventAction } from "../features/event";
 
 const Home: NextPage = () => {
+  const { datas } = useAppSelector((e) => e.event);
+  const dispatch = useAppDispatch();
+  const provider = useProvider();
+  const contract = useContract({
+    address: "0xf8e81D47203A594245E36C48e151709F0C19fBe8",
+    abi: ABI,
+    signerOrProvider: provider,
+  });
+  const { isConnected } = useAccount();
+
+  // const fetchAllEvent = async () => {
+  //   try {
+  //     let events = [];
+  //     const eventLength = await contract!.getEventLength();
+  //     console.log(eventLength);
+  //     for (let i: number = 0; i < eventLength; i++) {
+  //       const e = await contract!.getEvent(i);
+
+  //       console.log(e);
+  //       events.push(e);
+  //     }
+
+  //     dispatch(fetchEventAction(events));
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (datas == null) {
+      dispatch(updateEventAction());
+    }
+  }, [isConnected]);
+
   return (
     <AppLayout>
       <Meta title="Discover" />
@@ -23,14 +62,11 @@ const Home: NextPage = () => {
             </a>
           </div>
           <div className="flex flex-wrap w-full">
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
+            {datas != null &&
+              datas.length > 0 &&
+              datas.map((data: any, index: number) => (
+                <EventCard key={index} data={data} />
+              ))}
           </div>
         </div>
       </main>

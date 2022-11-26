@@ -5,11 +5,12 @@ import "@fontsource/fira-sans";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
-import { CeloProvider, Alfajores, Mainnet } from "@celo/react-celo";
 import { Provider } from "react-redux";
 import { store } from "../app/store";
-import "@celo/react-celo/lib/styles.css";
 import PersistWrapper from "next-persist/lib/NextPersistWrapper";
+import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 const PersistWrapperTypeFixed = PersistWrapper as any;
 
@@ -21,21 +22,30 @@ function MyApp({ Component, pageProps }: AppProps) {
     },
   };
 
+  const { provider, webSocketProvider } = configureChains(
+    [chain.polygonMumbai, chain.polygon],
+    //[publicProvider()]
+    [
+      jsonRpcProvider({
+        rpc: (chain) => ({
+          http: `https://rpc-mumbai.maticvigil.com`,
+        }),
+      }),
+    ]
+  );
+
+  const client = createClient({
+    autoConnect: true,
+    provider,
+    webSocketProvider,
+  });
+
   return (
     <Provider store={store}>
       <PersistWrapperTypeFixed wrapperConfig={nextPersistConfig}>
-        <CeloProvider
-          networks={[Alfajores, Mainnet]}
-          defaultNetwork={Alfajores.name}
-          dapp={{
-            name: "Eventnexo",
-            description: "Community First Event Management on Celo Network",
-            url: "https://example.com",
-            icon: "",
-          }}
-        >
+        <WagmiConfig client={client}>
           <Component {...pageProps} />
-        </CeloProvider>
+        </WagmiConfig>
       </PersistWrapperTypeFixed>
     </Provider>
   );

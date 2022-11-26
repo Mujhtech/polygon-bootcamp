@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noImplicitAny": true,
     "alwaysStrict": true,
     "target": "es5",

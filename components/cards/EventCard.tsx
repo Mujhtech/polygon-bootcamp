@@ -1,22 +1,27 @@
+import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function EventCard() {
+type Props = {
+  data: any;
+};
+
+export default function EventCard({ data }: Props) {
   return (
     <div className="w-full md:w-1/2 lg:w-1/3 flex-shrink-[0] group p-0 m-0">
-      <Link href="/event/celo-connect" passHref>
+      <Link href={`/event/${data.id}`} passHref>
         <a className="mb-10 px-3 py-0 relative w-full inline-block flex-shrink-[0]">
           <div className="relative cursor-pointer w-full p-0 m-0">
             <div className="group-hover:-translate-x-2 group-hover:-translate-y-2 duration-75 transition ease-out bg-white relative border-black border-2 z-[2] rounded-[8px]">
               <div className="p-6">
                 <h3 className="mb-6 font-black text-2xl w-full h-[70px] text-ellipsis line-clamp-2">
-                  POLYGON Workshop: Build upgradable smart contracts
+                  {data.title}
                 </h3>
                 <div className="flex flex-row items-center space-x-3">
                   <div className="my-2 flex items-center space-x-1">
                     <Image src="/polygon.png" width="15" height="15" />
-                    <h6 className="text-sm font-black">0.3MATIC</h6>
+                    <h6 className="text-sm font-black">{data.amount}MATIC</h6>
                   </div>
                   <div className="my-2 flex items-center space-x-1">
                     <svg
@@ -39,7 +44,7 @@ export default function EventCard() {
                       />
                     </svg>
 
-                    <h6 className="text-sm font-black">Virtual</h6>
+                    <h6 className="text-sm font-black">{data.location}</h6>
                   </div>
                   <div className="my-2 flex items-center space-x-1">
                     <svg
@@ -56,7 +61,9 @@ export default function EventCard() {
                         d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
                       />
                     </svg>
-                    <h6 className="text-sm font-black">22/09/2022</h6>
+                    <h6 className="text-sm font-black">
+                      {moment(data.date).format("d MMMM, yyyy hh:ss")}
+                    </h6>
                   </div>
                 </div>
                 {/* <p className="w-full text-xs font-bold ">

@@ -1,23 +1,33 @@
+import moment from "moment";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
+import { useAppSelector } from "../../app/hooks";
 import PrimaryButton from "../../components/btn/PrimaryButton";
 import SecondaryButton from "../../components/btn/SecondaryButton";
 import AppLayout from "../../components/layout/AppLayout";
 import Meta from "../../components/partials/Meta";
 
 export default function Home() {
+  const router = useRouter();
+  const { eventId } = router.query;
+  const { datas } = useAppSelector((e) => e.event);
+
+  const event =
+    datas != null && datas.length > 0
+      ? datas.find((e: any) => e.id == eventId)
+      : null;
+
   return (
     <AppLayout>
-      <Meta title="Discover" />
+      <Meta title={event.title} />
       <section className="max-w-8xl flex justify-between items-center my-0 mx-auto py-12 px-28">
         <div className="">
-          <h3 className="text-4xl font-black">
-            CELO Workshop: Build upgradable smart contracts
-          </h3>
+          <h3 className="text-4xl font-black">{event.title}</h3>
           <div className="flex flex-row items-center space-x-3">
             <div className="my-2 flex items-center space-x-1">
               <Image src="/polygon.png" width="15" height="15" />
-              <h6 className="text-sm font-black">0.3CELO</h6>
+              <h6 className="text-sm font-black">{event.amount}MATIC</h6>
             </div>
             <div className="my-2 flex items-center space-x-1">
               <svg
@@ -40,7 +50,7 @@ export default function Home() {
                 />
               </svg>
 
-              <h6 className="text-sm font-black">Virtual</h6>
+              <h6 className="text-sm font-black">{event.location}</h6>
             </div>
             <div className="my-2 flex items-center space-x-1">
               <svg
@@ -57,7 +67,9 @@ export default function Home() {
                   d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
                 />
               </svg>
-              <h6 className="text-sm font-black">22/09/2022</h6>
+              <h6 className="text-sm font-black">
+                {moment(event.date).format("d MMMM, yyyy hh:ss")}
+              </h6>
             </div>
           </div>
         </div>
@@ -80,7 +92,19 @@ export default function Home() {
       </section>
       <section className="border-t-2 border-t-black flex">
         <div className="w-full max-w-8xl flex my-0 mx-auto">
-          <div className="flex flex-col justify-between flex-1 pt-[60px]"></div>
+          <div className="flex flex-col justify-between flex-1 pt-[60px]">
+            <div className="mx-6">
+              <div className="flex items-center justify-center">
+                <Image
+                  src={event.image}
+                  width="300"
+                  height="300"
+                  className="border-2 border-black"
+                />
+              </div>
+              <p className="">{event.content}</p>
+            </div>
+          </div>
           <div
             className="w-[500px] border-l-2 border-l-black sticky top-[78px] flex-shrink-[0] overflow-y-auto"
             style={{
@@ -91,7 +115,10 @@ export default function Home() {
             <div className="w-full mb-6">
               <div className="w-full mb-6">
                 <h3 className="text-2xl font-black">
-                  Tickets <span className="text-md">(0/100)</span>
+                  Tickets{" "}
+                  <span className="text-md">
+                    ({event.totalTicketBought}/{event.maxTickets})
+                  </span>
                 </h3>
               </div>
               <div className="border-2 border-black rounded-[8px] mb-8 py-2 px-8">
@@ -131,22 +158,24 @@ export default function Home() {
                         height="15"
                         className="border-2 border-black rounded-full"
                       />
-                      <h6 className="text-md font-black">0.2CELO</h6>
+                      <h6 className="text-md font-black">
+                        {event.amount}MATIC
+                      </h6>
                     </div>
                   </div>
                   <div className="flex justify-between items-center py-6">
                     <h3 className="text-md font-black">CO2 Offset 🌱</h3>
                     <div className="my-2 flex items-center space-x-1">
-                      <Image
+                      {/* <Image
                         src="/polygon.png"
                         width="15"
                         height="15"
                         className="border-2 border-black rounded-full"
-                      />
-                      <h6 className="text-md font-black">0.2CELO</h6>
+                      /> */}
+                      <h6 className="text-md font-black">Coming soon...</h6>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center pt-2 pb-5 flex-row space-x-5">
+                  <div className="flex items-center justify-center pt-2 pb-5 flex-row space-x-2">
                     <h6 className="text-md font-black">Powered by:</h6>
                     <Image
                       src="/polygon.png"
@@ -154,6 +183,7 @@ export default function Home() {
                       height="15"
                       className="border-2 border-black rounded-full"
                     />
+                    <span className="font-black">Polygon</span>
                   </div>
                 </div>
               </div>

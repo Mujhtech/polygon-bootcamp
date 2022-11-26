@@ -9,12 +9,13 @@ module.exports = {
       fs: false,
       net: false,
       child_process: false,
+      tls: false,
       readline: false,
     };
     return config;
   },
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com", "i.imgur.com"],
+    domains: ["images.unsplash.com", "i.imgur.com", "firebasestorage.googleapis.com"],
   },
 };

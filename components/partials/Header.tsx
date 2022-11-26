@@ -7,14 +7,18 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import AppLogo from "./AppLogo";
 import PrimaryButton from "../btn/PrimaryButton";
 import SecondaryButton from "../btn/SecondaryButton";
-import { useCelo } from "@celo/react-celo";
+import { useAccount, useConnect, useEnsName } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import { shortenAddress } from "../../utils/address";
 import { Identicon } from "../Identicon";
 
 export default function NewHeader() {
   const [animateHeader, setAnimateHeader] = useState(false);
   const router = useRouter();
-  const { connect, address } = useCelo();
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
 
   const splitLocation = router.pathname.split("/");
   useEffect(() => {
@@ -115,7 +119,7 @@ export default function NewHeader() {
             <SecondaryButton
               title="Create event"
               onPressed={function () {
-                if (address) {
+                if (isConnected) {
                   router.push("/account");
                 } else {
                   connect();
@@ -137,13 +141,13 @@ export default function NewHeader() {
                 />
               </svg>
             </SecondaryButton>
-            {address ? (
+            {isConnected ? (
               <PrimaryButton
                 background="bg-primary"
-                title={shortenAddress(address, true, true)}
+                title={shortenAddress(address!, true, true)}
                 onPressed={connect}
               >
-                <Identicon address={address} size={24} />
+                <Identicon address={address!} size={24} />
               </PrimaryButton>
             ) : (
               <PrimaryButton

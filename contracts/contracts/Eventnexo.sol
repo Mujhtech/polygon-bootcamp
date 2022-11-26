@@ -2,108 +2,64 @@
 
 // Eventnexo
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "./EEventStorage.sol";
-import "./ETicketStorage.sol";
+import "./SafeMath.sol";
 import "./library/share_struct.sol";
 
-contract Eventnexo is
-    ERC721,
-    ERC721URIStorage,
-    ERC721Enumerable,
-    Ownable,
-    Pausable
-{
-    using Strings for uint256;
-    EEventStorage _eEventStorage;
-    ETicketStorage _eTicketStorage;
 
-    string public baseURI;
+contract Eventnexo is ERC721, Ownable, Pausable, ERC721URIStorage {
+    using SafeMath for uint256;
 
-    event NewEventCreated(uint256 eventId, address owner);
+    // currenct ticket id
+    uint256 currentTicketId;
+
+    mapping(uint256 => SharedStructs.ETicketStruct) eTicketCycles;
+
     event TicketMint(uint256 ticketId, address owner);
     event TicketTransfer(uint256 ticketId, address owner, address newOwner);
 
     constructor() ERC721("Eventnexo", "ENFT") {}
 
-    // create event
-    function createEvent(
-        string memory title,
-        string memory description,
-        string memory image,
-        string memory nftUri,
-        uint256 amount,
-        uint256 maxTickets,
-        uint256 eventDate
-    ) public {
-        _eEventStorage.createEvent(
-            title,
-            description,
-            image,
-            nftUri,
-            amount,
-            msg.sender,
-            maxTickets,
-            eventDate
-        );
-
-        uint256 eventId = _eEventStorage.getCurrentEventId();
-
-        emit NewEventCreated(eventId, msg.sender);
-    }
 
     // buy event
-    function buyTicket(uint256 eventId, uint256 quantity) public payable {
-        uint256 currentEventId = _eEventStorage.getCurrentEventId();
+    function buyTicket(string memory eventId, uint256 quantity, string memory nftUri) public payable {
 
-        //  Check if the event ID is valid
-        require(
-            eventId > 0 && eventId <= currentEventId,
-            "Event ID must be within valid EventId range"
-        );
+        currentTicketId += 1;
+        SharedStructs.ETicketStruct storage tStruct = eTicketCycles[
+            currentTicketId
+        ];
+        tStruct.eventId = eventId;
+        tStruct.owner = msg.sender;
+        tStruct.quantity = quantity;
 
-        //  Get the Event struct
-        SharedStructs.EEventStruct memory eventData = _eEventStorage
-            .getEventInfo(eventId);
+        _mint(msg.sender, currentTicketId);
 
-        _eTicketStorage.createTicket(msg.sender, quantity, eventId);
+        _setTokenURI(currentTicketId, nftUri);
 
-        uint256 ticketId = _eTicketStorage.getCurrentTicketId();
-
-        _mint(msg.sender, ticketId);
-
-        _setTokenURI(ticketId, eventData.nftUri);
-
-        emit TicketMint(ticketId, msg.sender);
+        emit TicketMint(currentTicketId, msg.sender);
     }
 
     // buy event
     function transferTicket(uint256 ticketId, address newOwner) public payable {
-        uint256 currenTicketId = _eTicketStorage.getCurrentTicketId();
-
         //  Check if the ticket ID is valid
         require(
-            ticketId > 0 && ticketId <= currenTicketId,
+            ticketId > 0 && ticketId <= currentTicketId,
             "Event ID must be within valid EventId range"
         );
 
-        (uint256 quantity, address owner) = _eTicketStorage.getTicketInfo(
-            ticketId
-        );
+        SharedStructs.ETicketStruct storage ticket = eTicketCycles[ticketId];
 
         //  Check if the owner is the one calling this function
         require(
-            owner != msg.sender,
+            ticket.owner != msg.sender,
             "You don't have access to transfer this ticket"
         );
 
-        _eTicketStorage.transfer(ticketId, newOwner);
+        ticket.owner = newOwner;
 
         _transfer(msg.sender, newOwner, ticketId);
 
@@ -111,43 +67,18 @@ contract Eventnexo is
     }
 
     function getTicketLength() public view returns (uint256) {
-        return _eTicketStorage.getCurrentTicketId();
+        return currentTicketId;
     }
 
-    function getEventLength() public view returns (uint256) {
-        return _eEventStorage.getCurrentEventId();
-    }
-
-    function getEvent(uint256 eventId)
-        public
-        view
-        returns (SharedStructs.EEventStruct memory)
-    {
-        return _eEventStorage.getEventInfo(eventId);
-    }
 
     function getTicket(uint256 ticketId)
         public
         view
-        returns (uint256 quantity, address owner)
+        returns (SharedStructs.ETicketStruct memory)
     {
-        return _eTicketStorage.getTicketInfo(ticketId);
-    }
+        SharedStructs.ETicketStruct memory ticket = eTicketCycles[ticketId];
 
-    function pause() public onlyOwner {
-        _pause();
-    }
-
-    function unpause() public onlyOwner {
-        _unpause();
-    }
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override(ERC721, ERC721Enumerable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        return ticket;
     }
 
     function _burn(uint256 tokenId)
@@ -164,14 +95,5 @@ contract Eventnexo is
         returns (string memory)
     {
         return super.tokenURI(tokenId);
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721Enumerable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
     }
 }

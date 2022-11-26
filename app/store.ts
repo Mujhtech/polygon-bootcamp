@@ -1,11 +1,13 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { config } from "./config";
-import { accountReducer } from "../features/account";
+import { eventReducer } from "../features/event";
+import { ticketReducer } from "../features/ticket";
 
 export function createStore() {
   return configureStore({
     reducer: {
-      account: accountReducer,
+      event: eventReducer,
+      ticket: ticketReducer,
     },
     devTools: config.debug,
   });

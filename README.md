@@ -20,7 +20,7 @@ Eventnexo lets event organizers issue and handle programmable event passes as NF
 
 Importantly, our protocol enables an open, secondary marketplace for these NFT event tickets, where participants can transparently buy or sell their passes - using their crypto or their in-App balances - to the original event organizers or to whomever is offering better prices.
 
-Finally, the protocol design implies the availability of real-time, useful data on all events and tickets which can be used or presented in different, convenient ways, like by having a dashboard or a Wallet App. Because tickets NFT’s are Celo based, they enable for social grouping too, allowing for same-event attendees to share any kind of content they might wish, including photos, audio, text, and more.
+Finally, the protocol design implies the availability of real-time, useful data on all events and tickets which can be used or presented in different, convenient ways, like by having a dashboard or a Wallet App. Because tickets NFT’s are Polygon based, they enable for social grouping too, allowing for same-event attendees to share any kind of content they might wish, including photos, audio, text, and more.
 
 Our product aims to service two type of users, attendees and organizers, which in turn can have Basic (web2 focused) or Advanced (web3 focused) profiles. We think it is important to facilitate the on-barding and usage processes for as many people as possible (adoption). We firmly believe that ticketing is one industry ripe to be disrupted by blockchain technologies, which can easily solve many of the current problems it faces, including scalping, falsification, hoarding and speculation.
 
