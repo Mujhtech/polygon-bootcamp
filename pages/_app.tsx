@@ -11,6 +11,7 @@ import PersistWrapper from "next-persist/lib/NextPersistWrapper";
 import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { Toaster } from "react-hot-toast";
 
 const PersistWrapperTypeFixed = PersistWrapper as any;
 
@@ -45,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <PersistWrapperTypeFixed wrapperConfig={nextPersistConfig}>
         <WagmiConfig client={client}>
           <Component {...pageProps} />
+          <Toaster />
         </WagmiConfig>
       </PersistWrapperTypeFixed>
     </Provider>

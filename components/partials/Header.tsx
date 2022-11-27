@@ -76,7 +76,7 @@ export default function NewHeader() {
             </Popover.Button>
           </div>
           <div className="hidden lg:flex items-start justify-end md:flex-1 lg:w-0 space-x-10">
-            <Link href="/discover" passHref>
+            {/* <Link href="/discover" passHref>
               <a
                 className={
                   (splitLocation[1] == "disover"
@@ -99,7 +99,7 @@ export default function NewHeader() {
               >
                 Communities
               </a>
-            </Link>
+            </Link> */}
           </div>
 
           {/* <Popover.Group
@@ -207,61 +207,48 @@ export default function NewHeader() {
               </div>
             </div>
             <div className="py-6 px-5 space-y-6">
-              {/* <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <Link href="/auction" passHref>
-                  <a
-                    className={
-                      (splitLocation[1] == "auction"
-                        ? "text-yell border-b border-b-yell hover:text-secondary hover:border-b-secondary"
-                        : "text-tertiary hover:text-secondary") +
-                      "  text-sm font-medium"
-                    }
-                  >
-                    Auctions
-                  </a>
-                </Link>
-                <Link href="/collections" passHref>
-                  <a
-                    className={
-                      (splitLocation[1] == "collections"
-                        ? "text-yell border-b border-b-yell hover:text-secondary hover:border-b-secondary"
-                        : "text-tertiary hover:text-secondary") +
-                      "  text-sm font-medium"
-                    }
-                  >
-                    Collections
-                  </a>
-                </Link>
-                <Link href="/about" passHref>
-                  <a
-                    className={
-                      (splitLocation[1] == "about"
-                        ? "text-yell border-b border-b-yell hover:text-secondary hover:border-b-secondary"
-                        : "text-tertiary hover:text-secondary") +
-                      "  text-sm font-medium"
-                    }
-                  >
-                    About
-                  </a>
-                </Link>
-              </div>
-              <div className="w-full flex flex-col space-y-3">
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    name="search"
-                    placeholder="Search"
-                    className="border px-3 py-2 focus:outline-0 focus:ring-0 text-sm font-medium w-full"
+              <SecondaryButton
+                title="Create event"
+                onPressed={function () {
+                  if (isConnected) {
+                    router.push("/account");
+                  } else {
+                    connect();
+                  }
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
-                  <FontAwesomeIcon
-                    icon={faSearch}
-                    className="absolute right-2 top-3 text-black text-opacity-40"
-                  />
-                </div>
-                <button className="bg-black whitespace-nowrap inline-flex items-center justify-center px-3 py-2 border border-transparent shadow-sm text-sm text-white">
-                  Connect wallet
-                </button>
-              </div> */}
+                </svg>
+              </SecondaryButton>
+              {isConnected ? (
+                <PrimaryButton
+                  background="bg-primary"
+                  title={shortenAddress(address!, true, true)}
+                  onPressed={() => {
+                    router.push("/account");
+                  }}
+                >
+                  <Identicon address={address!} size={24} />
+                </PrimaryButton>
+              ) : (
+                <PrimaryButton
+                  background="bg-secondary"
+                  title="Connect Wallet"
+                  onPressed={connect}
+                />
+              )}
             </div>
           </div>
         </Popover.Panel>

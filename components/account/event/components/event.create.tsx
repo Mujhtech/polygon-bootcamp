@@ -7,15 +7,18 @@ import { updateEventAction } from "../../../../features/event";
 import SecondaryButton from "../../../btn/SecondaryButton";
 import { ClipLoader } from "react-spinners";
 import { collection, addDoc } from "firebase/firestore/lite";
-import { db } from "../../../../firebase/client";
+import { db, storage } from "../../../../firebase/client";
 import { errorAlert, successAlert } from "../../../../app/toast";
 import { useAccount } from "wagmi";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function EventCreate() {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState("physical");
   const [bannerImageUrl, setBannerImageUrl] = useState("");
+  const [bannerImageBlob, setBannerImageBlob] = useState(null);
   const [nftImageUrl, setNftImageUrl] = useState("");
+  const [nftImageBlob, setNftImageBlob] = useState(null);
   const dispatch = useAppDispatch();
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -39,13 +42,41 @@ export default function EventCreate() {
   const handleForm = async (data: any) => {
     try {
       setLoading(true);
+      let image = null,
+        nftUri = null;
+
+      if (bannerImageBlob != null && bannerImageBlob != "") {
+        const imageRef = ref(
+          storage,
+          `images/${data.title.toLowerCase().replace(" ", "-")}.jpg`
+        );
+        const snapshot = await uploadBytes(imageRef, bannerImageBlob as Blob);
+        image = await getDownloadURL(snapshot.ref);
+      }
+
+      if (nftImageBlob != null && nftImageBlob != "") {
+        const imageRef = ref(
+          storage,
+          `nfts/${data.title.toLowerCase().replace(" ", "-")}.jpg`
+        );
+        const snapshot = await uploadBytes(imageRef, nftImageBlob as Blob);
+        nftUri = await getDownloadURL(snapshot.ref);
+      }
+
       await addDoc(collection(db, "events"), {
         ...data,
         location: location,
         creator: address,
+        totalTicketBought: 0,
+        image: image,
+        nftUri: nftUri,
         eventStartOn: new Date(data.eventStartOn).getTime(),
       });
       reset();
+      setNftImageBlob(null);
+      setBannerImageBlob(null);
+      setBannerImageUrl("");
+      setNftImageUrl("");
       setLoading(false);
       dispatch(updateEventAction());
       successAlert("Event created successfully");
@@ -59,11 +90,13 @@ export default function EventCreate() {
   const handleBannerFileChange = async (e: any) => {
     let url = URL.createObjectURL(e.target.files[0]);
     setBannerImageUrl(url);
+    setBannerImageBlob(e.target.files[0]);
   };
 
   const handleNftFileChange = async (e: any) => {
     let url = URL.createObjectURL(e.target.files[0]);
     setNftImageUrl(url);
+    setNftImageBlob(e.target.files[0]);
   };
 
   const getBannerImage = () => {
@@ -288,7 +321,11 @@ export default function EventCreate() {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <SecondaryButton title="Create event" onPressed={function () {}}>
+          <SecondaryButton
+            disabled={loading}
+            title="Create event"
+            onPressed={function () {}}
+          >
             {loading ? (
               <ClipLoader color="#ffffff" size={15} />
             ) : (

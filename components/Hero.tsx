@@ -5,8 +5,8 @@ import SecondaryButton from "./btn/SecondaryButton";
 export default function Hero() {
   return (
     <section className="flex w-full bg-primary border-b-2 border-b-black py-16 px-10">
-      <div className="max-w-6xl min-h-[400px] mx-auto my-0 relative flex items-center justify-center">
-        <h3 className="text-7xl font-black overflow-hidden text-ellipsis max-w-full text-white text-center">
+      <div className="max-w-6xl md:min-h-[400px] mx-auto my-0 relative flex items-center justify-center">
+        <h3 className="text-3xl md:text-5xl lg:text-7xl font-black overflow-hidden text-ellipsis max-w-full text-white text-center">
           Community First Event Management App on Polygon Network.
         </h3>
         {/* <div className="flex flex-col-reverse md:flex-start items-start bg-white border-black border-2 rounded-[10px] w-full relative z-[10] top-[16px] left-[20px] lg:top-[20px] lg:left-[30px] p-[12px] h-[500px]">
