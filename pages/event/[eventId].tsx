@@ -18,7 +18,7 @@ export default function Home() {
   const { datas } = useAppSelector((e) => e.event);
   const dispatch = useAppDispatch();
 
-  
+
 
   const provider = useProvider();
   const contract = useContract({
@@ -74,7 +74,7 @@ export default function Home() {
                     />
                   </svg>
 
-                  <h6 className="text-sm font-black">{event.location}</h6>
+                  <h6 className="text-sm font-black">{event.location.toUpperCase()}</h6>
                 </div>
                 <div className="my-2 flex items-center space-x-1">
                   <svg
@@ -92,7 +92,7 @@ export default function Home() {
                     />
                   </svg>
                   <h6 className="text-sm font-black">
-                    {moment(event.date).format("d MMMM, yyyy hh:ss")}
+                    {moment(event.eventStartOn).format("d MMMM, yyyy hh:ss")}
                   </h6>
                 </div>
               </div>

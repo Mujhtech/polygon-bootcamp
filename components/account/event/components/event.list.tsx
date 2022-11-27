@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useAccount } from "wagmi";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { updateEventAction } from "../../../../features/event";
 import EventCard from "../../../cards/EventCard";
@@ -6,6 +7,7 @@ import EventCard from "../../../cards/EventCard";
 export default function EventList() {
   const { datas } = useAppSelector((s) => s.event);
   const dispatch = useAppDispatch();
+  const { address } = useAccount();
 
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [filter, setFilter] = useState<any>(null);
@@ -25,11 +27,13 @@ export default function EventList() {
     let data;
 
     if (filter !== null && filter !== "") {
-      data = datas.filter((e: any) =>
-        e.title.toLowerCase().includes(filter.toLowerCase())
+      data = datas.filter(
+        (e: any) =>
+          e.title.toLowerCase().includes(filter.toLowerCase()) &&
+          e.creator == address
       );
     } else {
-      data = datas;
+      data = datas.filter((e: any) => e.creator == address);
     }
 
     setPageSize(Math.ceil(data.length / limit));
@@ -46,7 +50,7 @@ export default function EventList() {
   });
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="mx-3 flex flex-wrap w-full">
       {currentData.length > 0 ? (
         currentData.map((data: any, index: number) => (
           <EventCard data={data} key={index} />

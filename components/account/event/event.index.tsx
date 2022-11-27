@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import PrimaryButton from "../../btn/PrimaryButton";
+import EventCreate from "./components/event.create";
+import EventList from "./components/event.list";
 
-export default function EventList() {
+export default function EventPage() {
   const [tab, setTab] = useState("list");
   return (
     <div className="flex flex-col">
@@ -17,7 +19,10 @@ export default function EventList() {
           onPressed={() => setTab("create")}
         />
       </div>
-      <div className="mt-4">{tab == "list" && <EventList />}</div>
+      <div className="mt-4">
+        {tab == "list" && <EventList />}
+        {tab == "create" && <EventCreate />}
+      </div>
     </div>
   );
 }

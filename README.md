@@ -5,7 +5,7 @@ _Eventnexo is platform where community builder can build, grow and scale their e
 [https://eventnexo.co/](https://eventnexo.co/)
 
 ### Demo
-[https://mujhtech.github.io/polygon-bootcamp/](https://mujhtech.github.io/polygon-bootcamp/)
+[polygon-b-eventnexo.netlify.app](https://polygon-b-eventnexo.netlify.app)
 ### Team name
 #### Hackathon Track
 Polygon Bootcamp, Master Track

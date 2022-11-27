@@ -14,6 +14,29 @@
   ::-webkit-scrollbar {
     display: none;
   }
+
+  .form-control {
+    @apply p-2 w-full bg-white text-md border border-b-4 border-r-4 border-black rounded-md text-primary appearance-none ring-0 focus:ring-0 outline-none focus:border-primary;
+    height: 45px;
+  }
+
+  input[type="radio"] + label span {
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  input[type="radio"] + label span:hover,
+  input[type="radio"] + label:hover span {
+    transform: scale(1.2);
+  }
+
+  input[type="radio"]:checked + label span {
+    @apply bg-primary;
+    box-shadow: 0px 0px 0px 2px white inset;
+  }
+
+  input[type="radio"]:checked + label {
+    @apply !text-secondary;
+  }
 }
 
 .ReactModal__Overlay {
@@ -33,4 +56,38 @@
   width: 100% !important;
   position: relative !important;
   height: unset !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:active {
+  transition: "color 9999s ease-out, background-color 9999s ease-out";
+  transition-delay: 9999s;
+  color: #55586f;
+  -webkit-text-fill-color: #664ff0;
+}
+
+input.input-with-label:not(:placeholder-shown),
+input.material:not(:placeholder-shown),
+textarea.material:not(:placeholder-shown) {
+  background-color: #232835;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

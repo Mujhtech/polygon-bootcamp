@@ -44,7 +44,7 @@ export default function EventCard({ data }: Props) {
                       />
                     </svg>
 
-                    <h6 className="text-sm font-black">{data.location}</h6>
+                    <h6 className="text-sm font-black">{data.location.toUpperCase()}</h6>
                   </div>
                   <div className="my-2 flex items-center space-x-1">
                     <svg
@@ -61,8 +61,8 @@ export default function EventCard({ data }: Props) {
                         d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
                       />
                     </svg>
-                    <h6 className="text-sm font-black">
-                      {moment(data.date).format("d MMMM, yyyy hh:ss")}
+                    <h6 className="text-sm font-black line-clamp-1">
+                      {moment(data.eventStartOn).format("d MMMM, yyyy hh:ss")}
                     </h6>
                   </div>
                 </div>

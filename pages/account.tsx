@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useDisconnect } from "wagmi";
-import EventList from "../components/account/event/event.index";
+import EventPage from "../components/account/event/event.index";
 import ProfileAccount from "../components/account/profile/profile.account";
 import PrimaryButton from "../components/btn/PrimaryButton";
 import AppLayout from "../components/layout/AppLayout";
@@ -55,7 +55,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col justify-between flex-1 pt-[60px]">
-            {page == "event" && <EventList />}
+            {page == "event" && <EventPage />}
             {page == "account" && <ProfileAccount />}
           </div>
         </div>
