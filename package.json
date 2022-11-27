@@ -1,6 +1,6 @@
 {
   "private": true,
-  "homepage": "https://mujhtech.github.io/${polygon-bootcamp",
+  "homepage": "https://mujhtech.github.io/polygon-bootcamp",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +19,6 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
-    "@metamask/jazzicon": "https://github.com/jmrossy/jazzicon#7a8df28",
     "@reduxjs/toolkit": "^1.8.6",
     "bignumber.js": "^9.1.0",
     "ethers": "^5.7.2",
@@ -30,6 +29,7 @@
     "next-persist": "^1.2.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-jazzicon": "^1.0.4",
     "react-redux": "^8.0.4",
     "wagmi": "^0.8.6"
   },
