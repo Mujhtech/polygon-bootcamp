@@ -1,23 +1,44 @@
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
-import { useAppSelector } from "../../app/hooks";
+import React, { useEffect } from "react";
+import { useAccount, useContract, useProvider } from "wagmi";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { ABI } from "../../blockchain/ABIS/Eventnexo";
 import PrimaryButton from "../../components/btn/PrimaryButton";
 import SecondaryButton from "../../components/btn/SecondaryButton";
 import AppLayout from "../../components/layout/AppLayout";
 import NotFound from "../../components/NotFound";
 import Meta from "../../components/partials/Meta";
+import { updateEventAction } from "../../features/event";
 
 export default function Home() {
   const router = useRouter();
   const { eventId } = router.query;
   const { datas } = useAppSelector((e) => e.event);
+  const dispatch = useAppDispatch();
+
+  
+
+  const provider = useProvider();
+  const contract = useContract({
+    address: "0xf8e81D47203A594245E36C48e151709F0C19fBe8",
+    abi: ABI,
+    signerOrProvider: provider,
+  });
+
+  const { isConnected } = useAccount();
 
   const event =
     datas != null && datas.length > 0
       ? datas.find((e: any) => e.id == eventId)
       : null;
+
+  useEffect(() => {
+    if (datas == null) {
+      dispatch(updateEventAction());
+    }
+  });
 
   return (
     <AppLayout>
@@ -96,7 +117,7 @@ export default function Home() {
           <section className="border-t-2 border-t-black flex">
             <div className="w-full max-w-8xl flex my-0 mx-auto">
               <div className="flex flex-col justify-between flex-1 pt-[60px]">
-                <div className="mx-6">
+                <div className="mx-14">
                   <div className="flex items-center justify-center">
                     <Image
                       src={event.image}
@@ -105,7 +126,7 @@ export default function Home() {
                       className="border-2 border-black"
                     />
                   </div>
-                  <p className="">{event.content}</p>
+                  <p className="mt-4">{event.content}</p>
                 </div>
               </div>
               <div
@@ -200,7 +221,12 @@ export default function Home() {
                       height={50}
                       title="Get Ticket"
                       foreground="bg-primary"
-                      onPressed={() => console.log(0)}
+                      onPressed={() => {
+                        if (isConnected) {
+                        } else {
+                          alert("Please connect to continue");
+                        }
+                      }}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

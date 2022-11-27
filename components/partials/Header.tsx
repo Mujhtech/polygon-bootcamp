@@ -145,7 +145,9 @@ export default function NewHeader() {
               <PrimaryButton
                 background="bg-primary"
                 title={shortenAddress(address!, true, true)}
-                onPressed={connect}
+                onPressed={() => {
+                  router.push("/account");
+                }}
               >
                 <Identicon address={address!} size={24} />
               </PrimaryButton>

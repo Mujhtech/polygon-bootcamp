@@ -12,13 +12,6 @@ import { updateEventAction } from "../features/event";
 const Home: NextPage = () => {
   const { datas } = useAppSelector((e) => e.event);
   const dispatch = useAppDispatch();
-  const provider = useProvider();
-  const contract = useContract({
-    address: "0xf8e81D47203A594245E36C48e151709F0C19fBe8",
-    abi: ABI,
-    signerOrProvider: provider,
-  });
-  const { isConnected } = useAccount();
 
   // const fetchAllEvent = async () => {
   //   try {
@@ -42,7 +35,7 @@ const Home: NextPage = () => {
     if (datas == null) {
       dispatch(updateEventAction());
     }
-  }, [isConnected]);
+  });
 
   return (
     <AppLayout>

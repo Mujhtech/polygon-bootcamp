@@ -4,7 +4,8 @@ _Eventnexo is platform where community builder can build, grow and scale their e
 ._
 [https://eventnexo.co/](https://eventnexo.co/)
 
-## Eventnexo
+### Demo
+[https://mujhtech.github.io/polygon-bootcamp/](https://mujhtech.github.io/polygon-bootcamp/)
 ### Team name
 #### Hackathon Track
 Polygon Bootcamp, Master Track
@@ -25,7 +26,7 @@ Finally, the protocol design implies the availability of real-time, useful data 
 Our product aims to service two type of users, attendees and organizers, which in turn can have Basic (web2 focused) or Advanced (web3 focused) profiles. We think it is important to facilitate the on-barding and usage processes for as many people as possible (adoption). We firmly believe that ticketing is one industry ripe to be disrupted by blockchain technologies, which can easily solve many of the current problems it faces, including scalping, falsification, hoarding and speculation.
 
 #### Stack
-Nextjs + Tailwind + Solidity
+Nextjs + Tailwind + Solidity + Firebase
 
 #### URLs
 List any URLs relevant to demonstrating your prototype
