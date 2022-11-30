@@ -11,3 +11,7 @@ export const errorAlert = (message: any) => {
     position: "bottom-right",
   });
 };
+
+export const newTicketMintToast = (message = "Please wait...") => {
+  
+};

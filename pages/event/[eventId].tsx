@@ -1,28 +1,36 @@
+import { ethers } from "ethers";
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { useAccount, useContract, useProvider } from "wagmi";
+import React, { useEffect, useState } from "react";
+import { ClipLoader } from "react-spinners";
+import { useAccount, useContract, useSigner } from "wagmi";
+import { CONTRACT_ADDRESS } from "../../app/constant";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { errorAlert } from "../../app/toast";
+import { useCountdownTimer } from "../../app/useCountdownTimer";
 import { ABI } from "../../blockchain/ABIS/Eventnexo";
 import PrimaryButton from "../../components/btn/PrimaryButton";
 import SecondaryButton from "../../components/btn/SecondaryButton";
+import { Identicon } from "../../components/Identicon";
 import AppLayout from "../../components/layout/AppLayout";
 import NotFound from "../../components/NotFound";
 import Meta from "../../components/partials/Meta";
-import { updateEventAction } from "../../features/event";
+import { updateEventAction, updateEventDataAction } from "../../features/event";
+import { shortenAddress } from "../../utils/address";
 
 export default function Home() {
   const router = useRouter();
   const { eventId } = router.query;
   const { datas } = useAppSelector((e) => e.event);
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
-  const provider = useProvider();
+  const { data: signedData } = useSigner();
   const contract = useContract({
-    address: "0xf8e81D47203A594245E36C48e151709F0C19fBe8",
-    abi: ABI,
-    signerOrProvider: provider,
+    address: CONTRACT_ADDRESS,
+    abi: ABI.abi,
+    signerOrProvider: signedData,
   });
 
   const { isConnected } = useAccount();
@@ -37,6 +45,35 @@ export default function Home() {
       dispatch(updateEventAction());
     }
   });
+
+  const [days, hours, minutes, seconds] = useCountdownTimer(event.eventStartOn);
+
+  const buyTicket = async () => {
+    if (!isConnected) {
+      errorAlert("Please connect your metamask to continue");
+      return;
+    }
+    try {
+      setLoading(true);
+      const res = await contract!.buyTicket(
+        event.id,
+        event.creator,
+        1,
+        event.nftUrl,
+        {
+          value: ethers.utils.parseEther(String(0.001 * 1)),
+        }
+      );
+      await res.wait();
+      dispatch(updateEventDataAction({ id: event.id }));
+      setLoading(false);
+    } catch (e: any) {
+      setLoading(false);
+      if (e && e.data && e.data.message) {
+        errorAlert(e.data.message);
+      }
+    }
+  };
 
   return (
     <AppLayout>
@@ -95,6 +132,10 @@ export default function Home() {
                     {moment(event.eventStartOn).format("d MMMM, yyyy hh:ss")}
                   </h6>
                 </div>
+                <div className="my-2 flex items-center space-x-2 text-sm font-black">
+                  <Identicon address={event.creator} size={15} />
+                  <span> {shortenAddress(event.creator, true, true)}</span>
+                </div>
               </div>
             </div>
             <div>
@@ -150,22 +191,32 @@ export default function Home() {
                   <div className="border-2 border-black rounded-[8px] mb-8 py-2 px-3 lg:px-8">
                     {event.totalTicketBought < event.maxTickets && (
                       <div className="flex items-start justify-start flex-col w-full">
-                        <p className="md:text-md lg:text-lg font-black">Event start:</p>
+                        <p className="md:text-md lg:text-lg font-black">
+                          Event start:
+                        </p>
                         <div className="flex w-full justify-between mt-6 py-0 px-6 font-black">
                           <div className="flex flex-col items-center justify-center">
-                            <span className="md:text-2xl lg:text-4xl">00</span>
+                            <span className="md:text-2xl lg:text-3xl">
+                              {days}
+                            </span>
                             <i className="mt-2 not-italic text-xs">Days</i>
                           </div>
                           <div className="flex flex-col items-center justify-center">
-                            <span className="md:text-2xl lg:text-4xl">00</span>
+                            <span className="md:text-2xl lg:text-3xl">
+                              {hours}
+                            </span>
                             <i className="mt-2 not-italic text-xs">Hours</i>
                           </div>
                           <div className="flex flex-col items-center justify-center">
-                            <span className="md:text-2xl lg:text-4xl">00</span>
+                            <span className="md:text-2xl lg:text-3xl">
+                              {minutes}
+                            </span>
                             <i className="mt-2 not-italic text-xs">Minutes</i>
                           </div>
                           <div className="flex flex-col items-center justify-center">
-                            <span className="md:text-2xl lg:text-4xl">00</span>
+                            <span className="md:text-2xl lg:text-3xl">
+                              {seconds}
+                            </span>
                             <i className="mt-2 not-italic text-xs">Seconds</i>
                           </div>
                         </div>
@@ -173,7 +224,9 @@ export default function Home() {
                     )}
                     {event.totalTicketBought == event.maxTickets && (
                       <div className="flex items-center justify-center flex-col w-full py-8">
-                        <p className="text-3xl lg:text-4xl font-black">Sold out</p>
+                        <p className="text-3xl lg:text-4xl font-black">
+                          Sold out
+                        </p>
                       </div>
                     )}
                   </div>
@@ -228,27 +281,27 @@ export default function Home() {
                       height={50}
                       title="Get Ticket"
                       foreground="bg-primary"
-                      onPressed={() => {
-                        if (isConnected) {
-                        } else {
-                          alert("Please connect to continue");
-                        }
-                      }}
+                      onPressed={buyTicket}
+                      disabled={loading}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
-                        />
-                      </svg>
+                      {loading ? (
+                        <ClipLoader size={15} color="#ffffff" />
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
+                          />
+                        </svg>
+                      )}
                     </SecondaryButton>
                   </div>
                 </div>

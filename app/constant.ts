@@ -1,6 +1,1 @@
-export enum NativeTokenId {
-  CELO = "CELO",
-  cUSD = "cUSD",
-  cEUR = "cEUR",
-  cREAL = "cREAL",
-}
+export const CONTRACT_ADDRESS = "0x60CC130D2bdaB09D1Bd9f210998435225674A2df";

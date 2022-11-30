@@ -43,7 +43,7 @@ export default function EventCreate() {
     try {
       setLoading(true);
       let image = null,
-        nftUri = null;
+        nftUrl = null;
 
       if (bannerImageBlob != null && bannerImageBlob != "") {
         const imageRef = ref(
@@ -60,7 +60,7 @@ export default function EventCreate() {
           `nfts/${data.title.toLowerCase().replace(" ", "-")}.jpg`
         );
         const snapshot = await uploadBytes(imageRef, nftImageBlob as Blob);
-        nftUri = await getDownloadURL(snapshot.ref);
+        nftUrl = await getDownloadURL(snapshot.ref);
       }
 
       await addDoc(collection(db, "events"), {
@@ -69,7 +69,7 @@ export default function EventCreate() {
         creator: address,
         totalTicketBought: 0,
         image: image,
-        nftUri: nftUri,
+        nftUrl: nftUrl,
         eventStartOn: new Date(data.eventStartOn).getTime(),
       });
       reset();

@@ -2,12 +2,10 @@ import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import AppLogo from "./AppLogo";
 import PrimaryButton from "../btn/PrimaryButton";
 import SecondaryButton from "../btn/SecondaryButton";
-import { useAccount, useConnect, useEnsName } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { shortenAddress } from "../../utils/address";
 import { Identicon } from "../Identicon";
@@ -19,8 +17,8 @@ export default function NewHeader() {
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
+  const [walletConnect, setWalletConnect] = useState(false);
 
-  const splitLocation = router.pathname.split("/");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const listener = () => {
@@ -33,7 +31,11 @@ export default function NewHeader() {
         window.removeEventListener("scroll", listener);
       };
     }
-  }, []);
+  });
+
+  useEffect(() => {
+    setWalletConnect(isConnected);
+  }, [isConnected]);
   return (
     <Popover
       className={
@@ -141,23 +143,24 @@ export default function NewHeader() {
                 />
               </svg>
             </SecondaryButton>
-            {isConnected ? (
-              <PrimaryButton
-                background="bg-primary"
-                title={shortenAddress(address!, true, true)}
-                onPressed={() => {
+
+            <PrimaryButton
+              background="bg-primary"
+              title={
+                walletConnect
+                  ? shortenAddress(address!, true, true)
+                  : "Connect Wallet"
+              }
+              onPressed={() => {
+                if (walletConnect) {
                   router.push("/account");
-                }}
-              >
-                <Identicon address={address!} size={24} />
-              </PrimaryButton>
-            ) : (
-              <PrimaryButton
-                background="bg-secondary"
-                title="Connect Wallet"
-                onPressed={connect}
-              />
-            )}
+                } else {
+                  connect();
+                }
+              }}
+            >
+              {walletConnect && <Identicon address={address!} size={24} />}
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -232,23 +235,23 @@ export default function NewHeader() {
                   />
                 </svg>
               </SecondaryButton>
-              {isConnected ? (
-                <PrimaryButton
-                  background="bg-primary"
-                  title={shortenAddress(address!, true, true)}
-                  onPressed={() => {
+              <PrimaryButton
+                background="bg-primary"
+                title={
+                  walletConnect
+                    ? shortenAddress(address!, true, true)
+                    : "Connect Wallet"
+                }
+                onPressed={() => {
+                  if (walletConnect) {
                     router.push("/account");
-                  }}
-                >
-                  <Identicon address={address!} size={24} />
-                </PrimaryButton>
-              ) : (
-                <PrimaryButton
-                  background="bg-secondary"
-                  title="Connect Wallet"
-                  onPressed={connect}
-                />
-              )}
+                  } else {
+                    connect();
+                  }
+                }}
+              >
+                {walletConnect && <Identicon address={address!} size={24} />}
+              </PrimaryButton>
             </div>
           </div>
         </Popover.Panel>

@@ -1,6 +1,15 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { AppThunk } from "../../app/store";
 import { db } from "../../firebase/client";
-import { collection, getDocs, orderBy, query } from "firebase/firestore/lite";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  getDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore/lite";
 
 export const fetchEventAction = createAction<any>("event/fetchEvent");
 
@@ -14,3 +23,16 @@ export const updateEventAction = createAsyncThunk(
     return datas;
   }
 );
+
+export const updateEventDataAction =
+  (arg: any): AppThunk =>
+  async (dispatch, getState) => {
+    const eventRef = doc(db, "events", arg.id);
+    const eventRes = await getDoc(eventRef);
+
+    await updateDoc(eventRef, {
+      totalTicketBought: eventRes.data()!.totalTicketBought + 1,
+    });
+
+    dispatch(updateEventAction());
+  };
