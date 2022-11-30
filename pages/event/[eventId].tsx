@@ -46,7 +46,9 @@ export default function Home() {
     }
   });
 
-  const [days, hours, minutes, seconds] = useCountdownTimer(event.eventStartOn);
+  const [days, hours, minutes, seconds] = useCountdownTimer(
+    event != null ? event.eventStartOn : new Date().getTime()
+  );
 
   const buyTicket = async () => {
     if (!isConnected) {
