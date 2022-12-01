@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDisconnect } from "wagmi";
 import EventPage from "../components/account/event/event.index";
 import ProfileAccount from "../components/account/profile/profile.account";
+import TicketList from "../components/account/ticket/ticket.index";
 import PrimaryButton from "../components/btn/PrimaryButton";
 import AppLayout from "../components/layout/AppLayout";
 import { PageRoute } from "../components/PageRoute";
@@ -56,6 +57,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col justify-between flex-1 pt-[60px]">
             {page == "event" && <EventPage />}
+            {page == "ticket" && <TicketList />}
             {page == "account" && <ProfileAccount />}
           </div>
         </div>

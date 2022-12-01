@@ -91,3 +91,125 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.vertical-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.vertical-row .fill-parent {
+  flex: 1;
+}
+
+.ticket {
+  position: relative;
+  background-color: white;
+  height: 7em;
+  width: 20em;
+  border-radius: 0.5em;
+}
+
+.brand-icon {
+  position: absolute;
+  left: -1.25em;
+  top: 2em;
+}
+
+.brand-icon::before {
+  content: "";
+  position: absolute;
+  left: -0.9em;
+  top: -1em;
+  background-color: white;
+  height: 5em;
+  width: 5em;
+  border-radius: 50%;
+  box-shadow: 3px 2px 0px #ddd;
+}
+
+.separator {
+  position: absolute;
+  top: -0.5em;
+  right: 5.5em;
+  height: calc(100% + 1em);
+  width: 1.5em;
+}
+
+.separator::before {
+  content: "";
+  position: absolute;
+  top: 1em;
+  left: 0.5em;
+  height: calc(100% - 2em);
+  border-left: 1px dashed;
+  border-color: #fff;
+}
+
+.round-cut-out {
+  height: 1em;
+  width: 1em;
+  border-radius: 50%;
+  background-color: #7b3fe4;
+}
+
+.adjust-right-cut-out {
+  float: right;
+  margin-top: 3em;
+  margin-right: -0.5em;
+}
+
+.brand-name {
+  font-size: 1.75rem;
+  position: relative;
+  top: 1.4em;
+  left: 2.5em;
+  color: #fff;
+}
+
+.heading {
+  position: absolute;
+  left: 3em;
+  top: 1em;
+}
+
+.subheading {
+  position: absolute;
+  left: 8em;
+  bottom: 1em;
+  color: #fff;
+  font-size: 0.4rem;
+  text-transform: capitalize;
+}
+
+.booking-ticket {
+  position: absolute;
+  top: 1em;
+  right: 7.75em;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #fff;
+}
+
+.booking-ticket .month {
+  font-size: 0.6rem;
+}
+
+.barcode-container {
+  position: absolute;
+  right: 2.5em;
+  transform: rotate(-90deg);
+}
+
+.barcode-container img {
+  width: 4em;
+}
+
+.ticket-count {
+  position: absolute;
+  top: 5.5em;
+  right: 1.5em;
+  font-size: 0.6rem;
+  color: #fff;
+  transform: rotate(-90deg);
+  font-weight: bold;
+}

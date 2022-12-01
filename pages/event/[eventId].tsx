@@ -18,6 +18,7 @@ import NotFound from "../../components/NotFound";
 import Meta from "../../components/partials/Meta";
 import { updateEventAction, updateEventDataAction } from "../../features/event";
 import { shortenAddress } from "../../utils/address";
+import { Web3Storage } from "web3.storage";
 
 export default function Home() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function Home() {
     signerOrProvider: signedData,
   });
 
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const event =
     datas != null && datas.length > 0
@@ -50,6 +51,21 @@ export default function Home() {
     event != null ? event.eventStartOn : new Date().getTime()
   );
 
+  const makeFileObjects = (file: any) => {
+    const blob = new Blob([JSON.stringify(file)], { type: "application/json" });
+    const files = [new File([blob], `${file.name}.json`)];
+    return files;
+  };
+
+  const formattedName = (name: any) => {
+    let file_name;
+    const trim_name = name.trim();
+    if (trim_name.includes(" ")) {
+      file_name = trim_name.replaceAll(" ", "%20");
+      return file_name;
+    } else return trim_name;
+  };
+
   const buyTicket = async () => {
     if (!isConnected) {
       errorAlert("Please connect your metamask to continue");
@@ -57,15 +73,27 @@ export default function Home() {
     }
     try {
       setLoading(true);
-      const res = await contract!.buyTicket(
-        event.id,
-        event.creator,
-        1,
-        event.nftUrl,
-        {
-          value: ethers.utils.parseEther(String(0.001 * 1)),
-        }
-      );
+
+      const client = new Web3Storage({
+        token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API!,
+      });
+
+      const file_name = formattedName(event.title);
+
+      const data = {
+        name: event.title,
+        image: event.nftUrl,
+        description: `Event ticket for ${event.title}`,
+        owner: address,
+      };
+
+      const files = makeFileObjects(data);
+      const file_cid = await client.put(files);
+      const URI = `https://${file_cid}.ipfs.w3s.link/${file_name}.json`;
+
+      const res = await contract!.buyTicket(event.id, event.creator, 1, URI, {
+        value: ethers.utils.parseEther(String(0.001 * 1)),
+      });
       await res.wait();
       dispatch(updateEventDataAction({ id: event.id }));
       setLoading(false);
