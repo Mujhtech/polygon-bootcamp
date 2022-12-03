@@ -16,6 +16,6 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com", "i.imgur.com", "firebasestorage.googleapis.com"],
+    domains: ["images.unsplash.com", "i.imgur.com", "firebasestorage.googleapis.com", "s2.coinmarketcap.com"],
   },
 };

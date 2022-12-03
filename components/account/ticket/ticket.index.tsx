@@ -72,7 +72,7 @@ export default function TicketList() {
   });
 
   return (
-    <div className="mt-4 mx-3 flex flex-wrap w-full">
+    <div className="mt-4 mx-3 flex flex-wrap w-full px-8">
       {loading ? (
         <div className="mt-10 w-full flex flex-col items-center justify-center">
           <ClipLoader color="#7B3FE4" size={20} />

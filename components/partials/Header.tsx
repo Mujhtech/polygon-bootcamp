@@ -33,16 +33,9 @@ export default function NewHeader() {
     }
   });
 
-  let connetWalletText = walletConnect
-    ? shortenAddress(address!, true, true) ?? ""
-    : "Connect Wallet";
-
   useEffect(() => {
     if (address != undefined && isConnected) {
       setWalletConnect(isConnected);
-    } else {
-      setWalletConnect(!isConnected);
-      connetWalletText = "Connect Wallet";
     }
   }, [isConnected, address]);
 
@@ -156,7 +149,11 @@ export default function NewHeader() {
 
             <PrimaryButton
               background="bg-primary"
-              title={connetWalletText}
+              title={
+                walletConnect
+                  ? shortenAddress(address!, true, true) ?? ""
+                  : "Connect Wallet"
+              }
               onPressed={() => {
                 if (walletConnect) {
                   router.push("/account");
@@ -243,7 +240,11 @@ export default function NewHeader() {
               </SecondaryButton>
               <PrimaryButton
                 background="bg-primary"
-                title={connetWalletText}
+                title={
+                  walletConnect
+                    ? shortenAddress(address!, true, true) ?? ""
+                    : "Connect Wallet"
+                }
                 onPressed={() => {
                   if (walletConnect) {
                     router.push("/account");

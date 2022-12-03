@@ -1,4 +1,6 @@
+import Image from "next/image";
 import React from "react";
+import { useAppSelector } from "../../app/hooks";
 import { shortenAddress } from "../../utils/address";
 
 type Props = {
@@ -6,17 +8,19 @@ type Props = {
 };
 
 export default function TicketCard({ data }: Props) {
-  const style = { "var(--image-url)": data.image } as React.CSSProperties;
+  const { datas } = useAppSelector((s) => s.event);
+
+  const event =
+    datas != null ? datas.find((e: any) => e.id == data.eventId) : null;
 
   return (
-    <div className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-[0] group p-0 m-0">
+    <div className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-[0] group p-0 m-0 ticket-card">
       <div className="mb-10 px-3">
         <div className="ticket !bg-primary">
-          <div
-            className={`brand-icon before:bg-cover before:bg-no-repeat before:bg-center before:bg-[image:var(--image-url)]`}
-            style={style}
-          >
-            <div className="absolute w-full h-full bg-cover bg-no-repeat bg-center"></div>
+          <div className={`brand-icon`}>
+            <div className="relative w-20 h-20 -top-4 -left-4 bg-cover bg-no-repeat bg-center">
+              <Image src={data.image} layout="fill" className="rounded-full" />
+            </div>
           </div>
           <div className="vertical-row separator">
             <div className="round-cut-out !bg-white"></div>
@@ -33,7 +37,7 @@ export default function TicketCard({ data }: Props) {
             {shortenAddress(data.owner, true, true)}
           </div>
           <div className="subheading">
-            thank you raza susan for the invitation
+            thank you for registering for the event
           </div>
           <div className="barcode-container">
             <img

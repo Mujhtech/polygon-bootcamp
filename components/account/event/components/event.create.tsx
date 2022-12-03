@@ -120,7 +120,7 @@ export default function EventCreate() {
         className="mt-4 mx-4 grid grid-cols-1 gap-5"
         onSubmit={handleSubmit(handleForm)}
       >
-        <div className="flex flex-row md:space-x-6">
+        <div className="flex flex-col md:flex-row md:space-x-6">
           <div className="flex flex-col md:w-1/2">
             <div className="mb-4 flex flex-col space-y-2">
               <label className="text-md text-black">Title</label>
@@ -233,7 +233,7 @@ export default function EventCreate() {
               )}
             </div>
           </div>
-          <div className="flex md:flex-row md:space-x-10">
+          <div className="flex flex-row justify-between space-x-10">
             <div className="mb-4 flex flex-col space-y-2">
               <label className="text-md text-black">Event Banner</label>
               <div

@@ -25,7 +25,7 @@ export default function Home() {
   const Nav = () => {
     return (
       <div className="w-full mb-6">
-        <div className="flex flex-row space-x-4 items-center justify-center lg:justify-start lg:items-start lg:flex-col lg:space-y-6">
+        <div className="flex flex-row space-x-4 items-center justify-center lg:justify-start lg:items-start lg:flex-col lg:space-y-6 lg:space-x-0">
           <PrimaryButton
             title="My Event"
             background={page == "event" ? "bg-primary" : "bg-black"}
